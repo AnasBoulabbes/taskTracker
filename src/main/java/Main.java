@@ -7,6 +7,7 @@ public class Main {
     public static void main(String[] args){
         String action="empty";
         TaskManager tm=new TaskManager();
+        tm.loadTasksFromJson();
         System.out.println("Welcome to Task Tracker the ultimate tool for efficiency and productivity.");
         promptEnterKey();
         System.out.println("To provoke the guide menu hit /h and the guide menu will pop up.");

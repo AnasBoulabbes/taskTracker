@@ -1,15 +1,32 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class TaskManager {
     private List<Task> tasks=new ArrayList<>();
+    public void loadTasksFromJson() {
+        File file = new File("tasks.json");
+        if (file.exists() && file.length() > 0) {
+            try (FileReader reader = new FileReader(file)) {
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+                        .create();
+                tasks = gson.fromJson(reader, new TypeToken<List<Task>>() {}.getType());
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found: " + e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Error reading from file: " + e.getMessage());
+            }
+        } else {
+            System.out.println("No tasks found. Starting with an empty list.");
+            tasks = new ArrayList<>();  // Start with an empty task list
+        }
+    }
     public void jsonToFile() throws IOException {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
